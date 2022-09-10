@@ -1,14 +1,26 @@
 import React, { useEffect } from 'react';
-import { atom, useRecoilState, useRecoilValue } from 'recoil';
+import { atom, useRecoilState, useRecoilValue, selector } from 'recoil';
 
 // atom으로 스토어를 생성 (폴더를 만들어서 관리하면 좋을꺼 같음) key는 스토어이름, default는 기본값
 const animalsStore = atom({ key: 'animals', default: [] });
 const usersStore = atom({ key: 'users', default: [] });
+// selector는 스토어를 합치거나 커스텀 데이터를 정제 가능해보임
+const zooStore = selector({
+  key: 'zoo',
+  get: ({ get }) => {
+    const animals = get(animalsStore);
+    const users = get(usersStore);
+    return { zoo: { animals, users } };
+  },
+});
 
 function App() {
   // useState와 형식이 같아서 러닝커브가 적어보임
   const [animals, setAnimals] = useRecoilState(animalsStore);
   const [users, setUsers] = useRecoilState(usersStore);
+  // getter 자리에 얻어 올 수 있음
+  const zooValue = useRecoilValue(zooStore);
+  const [zoo] = useRecoilState(zooStore);
   // useState에서 getter만 분리한 함수인거 같음
   const getAnimals = useRecoilValue(usersStore);
   const handleOnSubmit = (e) => {
@@ -26,6 +38,7 @@ function App() {
     console.log('users', users);
     console.log('getAnimals', getAnimals);
     console.groupEnd();
+    console.log(zooValue, zoo);
   });
   return (
     <div>
