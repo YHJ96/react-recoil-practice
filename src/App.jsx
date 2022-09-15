@@ -5,12 +5,16 @@ import { atom, useRecoilState, useRecoilValue, selector } from 'recoil';
 const animalsStore = atom({ key: 'animals', default: [] });
 const usersStore = atom({ key: 'users', default: [] });
 // selector는 스토어를 합치거나 커스텀 데이터를 정제 가능해보임
+// getter와 setter를 마음대로 바꿀수 있음 조합이 가능함
 const zooStore = selector({
   key: 'zoo',
   get: ({ get }) => {
     const animals = get(animalsStore);
     const users = get(usersStore);
     return { zoo: { animals, users } };
+  },
+  set: ({ set }, value) => {
+    set(animalsStore, value);
   },
 });
 
@@ -20,7 +24,7 @@ function App() {
   const [users, setUsers] = useRecoilState(usersStore);
   // getter 자리에 얻어 올 수 있음
   const zooValue = useRecoilValue(zooStore);
-  const [zoo] = useRecoilState(zooStore);
+  const [zoo, setZoo] = useRecoilState(zooStore);
   // useState에서 getter만 분리한 함수인거 같음
   const getAnimals = useRecoilValue(usersStore);
   const handleOnSubmit = (e) => {
@@ -31,6 +35,7 @@ function App() {
     setUsers([...users, user.value]);
     animal.value = null;
     user.value = null;
+    setZoo(['늑대']);
   };
   useEffect(() => {
     console.group();
