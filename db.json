@@ -1,1 +1,24 @@
-{}
+{
+  "animals": [
+    {
+      "id": 1,
+      "name": "dog",
+      "count": 9
+    },
+    {
+      "id": 2,
+      "name": "cat",
+      "count": 5
+    },
+    {
+      "id": 3,
+      "name": "rabbit",
+      "count": 14
+    },
+    {
+      "id": 4,
+      "name": "sheep",
+      "count": 1
+    }
+  ]
+}
