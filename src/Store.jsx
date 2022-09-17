@@ -1,5 +1,8 @@
 import React, { useEffect } from 'react';
-import { atom, useRecoilState } from 'recoil';
+import axios from 'axios';
+import { atom, useRecoilState, selector } from 'recoil';
+
+const API = 'http://localhost:8080/animals';
 
 // function useRecoilState<T>(state: RecoilState<T>): [T, SetterOrUpdater<T>];
 // type SetterOrUpdater<T> = (T | (T => T)) => void;
@@ -9,13 +12,27 @@ import { atom, useRecoilState } from 'recoil';
 */
 
 const animals = atom({ key: 'animal', default: [] });
+// 비동기 통신코드는 Suspense와 사용하는것을 권유하고 있다.
+const asyncAnimals = selector({
+  key: 'asyncAnimal',
+  get: async () => {
+    // 예외처리를 위한 try catch
+    try {
+      const response = await axios.get(API);
+      return response;
+    } catch ({ message }) {
+      return message;
+    }
+  },
+});
 
 function Store() {
   const [animal, setAnimal] = useRecoilState(animals);
+  const [asyncAnimal] = useRecoilState(asyncAnimals);
 
   useEffect(() => {
-    console.log(animal);
-  }, [animal]);
+    console.log(asyncAnimal);
+  }, [asyncAnimal]);
 
   const handleOnClick = () => {
     setAnimal((state) => {
@@ -26,7 +43,7 @@ function Store() {
 
   return (
     <div>
-      <div>{animal}</div>
+      <div>{asyncAnimal}</div>
       <input />
       <button onClick={handleOnClick}>입력</button>
     </div>
