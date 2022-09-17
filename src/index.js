@@ -7,6 +7,8 @@ import { RecoilRoot } from 'recoil';
 const root = document.getElementById('root');
 ReactDOM.createRoot(root).render(
   <RecoilRoot>
-    <Store />
+    <React.Suspense fallback={<div>...준비중</div>}>
+      <Store />
+    </React.Suspense>
   </RecoilRoot>,
 );
